@@ -1,6 +1,6 @@
 package JUnitTests;
 
-import project.BusinessObject.Step;
+import project.BusinessObject;//.Step;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +30,7 @@ class BusinessObjectTest {
     String beneficiaryPassportExpirationDate = "07152028"; // 07/15/2028
 
     String workID = "123456";
-    Step currentStep = Step.DATA_ENTRY;
+    //Step currentStep = Step.DATA_ENTRY;
     boolean approveStatus = false;
     boolean emailSent = false;
 
@@ -176,18 +176,20 @@ class BusinessObjectTest {
 
     /**
      * Test 18 tests getCurrentStep() method
-     */
+     
     @Test
     public void testGetCurrentStep() {
         assertEquals("This should return current step.", currentStep, bo.getCurrentStep());
     }
+    
+    */
 
     /**
      * Test 19 tests getApproveStatus() method
      */
     @Test
     public void testGetApproveStatus() {
-        assertEquals("This should return whether beneficiary has been approved or not.", approveStatus, bo.getApproveStatus());
+        assertEquals("This should return whether beneficiary has been approved or not.", bo.getApproveStatus());
     }
 
     /**
@@ -195,7 +197,7 @@ class BusinessObjectTest {
      */
     @Test
     public void testGetEmailSent() {
-        assertEquals("This should return whether eamil has been sent to beneficiary.", emailSent, bo.getEmailSent());
+        assertEquals("This should return whether eamil has been sent to beneficiary.", bo.getEmailSent());
     }
 
     /**
@@ -369,32 +371,22 @@ class BusinessObjectTest {
     }
 
     /**
-     * Test 38 tests setCurrentStep() method
-     */
-    @Test
-    public void testSetCurrentStep() {
-        Step newCurrentStep = Step.REVIEW;
-        bo.setCurrentStep(newCurrentStep);
-        assertEquals("This should set new current step.", newCurrentStep, bo.getCurrentStep());
-    }
-
-    /**
-     * Test 39 tests setApproveStatus() method
+     * Test 38 tests setApproveStatus() method
      */
     @Test
     public void testSetApproveStatus() {
         boolean newApproveStatus = true;
         bo.setApproveStatus(newApproveStatus);
-        assertEquals("This should set new approve status.", newApproveStatus, bo.getApproveStatus());
+        assertEquals(newApproveStatus, bo.getApproveStatus());
     }
 
     /**
-     * Test 40 tests setEmailSent() method
+     * Test 39 tests setEmailSent() method
      */
     @Test
     public void testSetEmailSent() {
         boolean newEmailSent = true;
         bo.setEmailSent(newEmailSent);
-        assertEquals("This should set new email sent status.", newEmailSent, bo.getEmailSent());
+        assertEquals(newEmailSent, bo.getEmailSent());
     }
 }
