@@ -1,56 +1,59 @@
-package project;
+package com.example.immigrationsystem;
+
+import java.util.LinkedList;
+
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.shape.Line;
-import javafx.event.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-
-import java.util.*;
+import javafx.stage.Stage;
 
 /**
- * @param petitionerLastName
- * JavaFX App
+ * This function is in charge of displaying the original form for the user.
+ * @author Wills Jarquin.
  */
-public class ApprovalObject extends Application{
-    
+public class ReviewObject  extends Application{
+	
 	BusinessObject bo = new BusinessObject();
 	
 	/**
-	 * This method runs the main program
-	 * @param args are the optional CLI parameters 
+	 * This method shows a screen.
+	 * @param bo is the bo to rendered.
 	 */
-    public static void main(String[] args) {
-        launch();
-    }
-	
-	/**
-	 * This method starts the screen
-	 * @param arg0 is the screen to be rendered.
-	 */
-	@Override
-	public void start(Stage arg0) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void showScreen(BusinessObject bo) {
+		this.bo = bo;
+		launch();
 	}
 	
 	/**
-	 * This method gets a scene to be rendered.
+	 * This function initializes the sub-system.
+	 * @param args are console parameters.
+	 */
+	@Override
+	public void start(Stage arg0) throws Exception {	
+		
+		arg0.setTitle("Worker Petition Form");
+		arg0.show();
+	}
+	
+	/**
+	 * * This method grabs a stage and the objects and renders into the screen.
 	 * @param boListToReview is the list of BOs to review.
 	 * @param boListToApprove is the list of BOs to approve.
 	 * @param stage is the stage to be rendered.
 	 * @return the scene to render.
 	 */
 	public Scene getScene(LinkedList<BusinessObject> boListToReview, LinkedList<BusinessObject> boListToApprove, Stage stage) {
-		this.bo = boListToApprove.getFirst();
+		this.bo = boListToReview.getFirst();
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
@@ -58,7 +61,7 @@ public class ApprovalObject extends Application{
 		grid.setPadding(new Insets(25, 25, 25, 25));
 		Scene scene = new Scene(grid, 700, 800);
 		
-		Text sceneTitle = new Text("Approval Worker Petition");
+		Text sceneTitle = new Text("Review Worker Petition");
 		sceneTitle.setFont(Font.font(STYLESHEET_CASPIAN, FontWeight.BOLD, 20));
 		grid.add(sceneTitle, 0, 0, 2, 1);
 		
@@ -199,50 +202,67 @@ public class ApprovalObject extends Application{
 		grid.add(line2, 0, 19);
 		
 		Button confirmButton = new Button();
-		confirmButton.setText("Approve");
+		confirmButton.setText("Confirm");
 		confirmButton.setFont(Font.font(STYLESHEET_CASPIAN, FontWeight.BOLD, 18));
 		confirmButton.setStyle("-fx-background-color: #6dbf84");
 		confirmButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("REQUEST APPROVAL/DENIAL");
-				alert.setContentText("Your request has been approved!");
-				alert.showAndWait();
-				boListToApprove.pop();
-				
-				if(boListToApprove.size() <= 0) {
+				boolean pass = true;
+				BusinessObject bo = new BusinessObject();
+				bo.setPetitionerFirstName(pFirstName.getText());
+				bo.setPetitionerLastName(pLastName.getText());
+				bo.setBusinessName(companyName.getText());
+				bo.setAddress(pAddress.getText());
+				bo.setPhoneNumber(pPhoneNumber.getText());
+				bo.setEmail(pEmail.getText());
+				bo.setEIN(einSsn.getText());
+				bo.setBeneficiaryFirstName(bFirstName.getText());
+				bo.setBeneficiaryLastName(bLastName.getText());
+				bo.setBeneficiaryDOB(""+dob.getText());
+				bo.setBeneficiaryGender(gender.getText());;
+				bo.setBeneficiaryCountryOfBirth(origin.getText());
+				bo.setBeneficiaryAddress(bAddress.getText());
+				bo.setBeneficiaryPassportExpirationDate(""+passportExpirationDate.getText());
+				boListToApprove.add(bo);
+				boListToReview.pop();
+				if(boListToReview.size() <= 0) {
 					WorkFlowObject wf = new WorkFlowObject();
 					stage.setScene(wf.getScene(stage, boListToReview, boListToApprove));
 				}
 				else {
-					ApprovalObject ap = new ApprovalObject();
-					stage.setScene(ap.getScene(boListToReview, boListToApprove, stage));
+					ReviewObject re = new ReviewObject();
+					stage.setScene(re.getScene(boListToReview, boListToApprove, stage));
 				}
 			}
 		});
 		grid.add(confirmButton, 0, 20);
 		
 		Button rejectButton = new Button();
-		rejectButton.setText("Deny");
+		rejectButton.setText("Edit Request");
 		rejectButton.setFont(Font.font(STYLESHEET_CASPIAN, FontWeight.BOLD, 18));
 		rejectButton.setStyle("-fx-background-color: #db7280");
 		rejectButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("REQUEST APPROVAL/DENIAL");
-				alert.setContentText("Your request has been denied!");
-				alert.showAndWait();
-				boListToReview.add(boListToApprove.pop());
-				if(boListToApprove.size() <= 0) {
-					WorkFlowObject wf = new WorkFlowObject();
-					stage.setScene(wf.getScene(stage, boListToReview, boListToApprove));
-				}
-				else {
-					ApprovalObject ap = new ApprovalObject();
-					stage.setScene(ap.getScene(boListToReview, boListToApprove, stage));
-				}
+				boolean pass = true;
+				BusinessObject bo = new BusinessObject();
+				bo.setPetitionerFirstName(pFirstName.getText());
+				bo.setPetitionerLastName(pLastName.getText());
+				bo.setBusinessName(companyName.getText());
+				bo.setAddress(pAddress.getText());
+				bo.setPhoneNumber(pPhoneNumber.getText());
+				bo.setEmail(pEmail.getText());
+				bo.setEIN(einSsn.getText());
+				bo.setBeneficiaryFirstName(bFirstName.getText());
+				bo.setBeneficiaryLastName(bLastName.getText());
+				bo.setBeneficiaryDOB(""+dob.getText());
+				bo.setBeneficiaryGender(gender.getText());;
+				bo.setBeneficiaryCountryOfBirth(origin.getText());
+				bo.setBeneficiaryAddress(bAddress.getText());
+				bo.setBeneficiaryPassportExpirationDate(""+passportExpirationDate.getText());
+				DataEntryObject de = new DataEntryObject();
+				stage.setScene(de.getScene(boListToReview, boListToApprove, stage, true));
 			}
 		});
 		grid.add(rejectButton, 1, 20);
@@ -267,9 +287,9 @@ public class ApprovalObject extends Application{
 		previousButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				boListToApprove.addFirst(boListToApprove.removeLast());
-				ApprovalObject ap = new ApprovalObject();
-				stage.setScene(ap.getScene(boListToReview, boListToApprove, stage));
+				boListToReview.addFirst(boListToReview.removeLast());
+				ReviewObject re = new ReviewObject();
+				stage.setScene(re.getScene(boListToReview, boListToApprove, stage));
 			}
 		});
 		grid.add(previousButton, 0, 21);
@@ -281,12 +301,14 @@ public class ApprovalObject extends Application{
 		nextButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				boListToApprove.addLast(boListToApprove.pop());
-				ApprovalObject ap = new ApprovalObject();
-				stage.setScene(ap.getScene(boListToReview, boListToApprove, stage));
+				boListToReview.addLast(boListToReview.pop());
+				ReviewObject re = new ReviewObject();
+				stage.setScene(re.getScene(boListToReview, boListToApprove, stage));
 			}
 		});
 		grid.add(nextButton, 1, 21);
+		
 		return scene;
 	}
+
 }

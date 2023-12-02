@@ -1,4 +1,4 @@
-package project;
+package com.example.immigrationsystem;
 
 import java.util.LinkedList;
 

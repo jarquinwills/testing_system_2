@@ -1,4 +1,4 @@
-package project;
+package com.example.immigrationsystem;
 
 /**
  * This function is in charge of gathering the form's info and generate a
